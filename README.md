@@ -3,9 +3,9 @@ A collection of helper scripts for (Unity3d) Mirror networking. Note that the co
 
 [![Img alt text](https://img.youtube.com/vi/jw6O2oUgb20/0.jpg)](https://www.youtube.com/watch?v=jw6O2oUgb20)
 
-[![Img alt text](https://img.youtube.com/vi/fnR982fjB3Y/0.jpg)](https://www.youtube.com/watch?v=jw6O2oUgb20)
+[![Img alt text](https://img.youtube.com/vi/fnR982fjB3Y/0.jpg)](https://www.youtube.com/watch?v=fnR982fjB3Y)
 
-[![Img alt text](https://img.youtube.com/vi/d_5S1qLqVKg/0.jpg)](https://www.youtube.com/watch?v=jw6O2oUgb20)
+[![Img alt text](https://img.youtube.com/vi/d_5S1qLqVKg/0.jpg)](https://www.youtube.com/watch?v=d_5S1qLqVKg)
 
 [![Img alt text](https://img.youtube.com/vi/MxSOvCc-DDI/0.jpg)](https://www.youtube.com/watch?v=MxSOvCc-DDI)
 
