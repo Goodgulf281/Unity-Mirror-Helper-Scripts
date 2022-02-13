@@ -12,10 +12,11 @@ If you want to import the mirror-ui-standard-assets package into your project th
 6. Add the Offline, Room and Playground scenes to the build settings and you’re ready to go.
 
 
-![Network Transform](https://github.com/Goodgulf281/Unity-Mirror-Helper-Scripts/blob/main/Goodgulf/mira.png?raw=true)
+![Network Transform](https://github.com/Goodgulf281/Unity-Mirror-Helper-Scripts/blob/main/Goodgulf/mir5a.png)
 
-![Network Animator](/mirb.png)
-![Network Room Manager UI](mirc.png)
+![Network Animator](https://github.com/Goodgulf281/Unity-Mirror-Helper-Scripts/blob/main/Goodgulf/mir5b.png)
+
+![Network Room Manager UI](https://github.com/Goodgulf281/Unity-Mirror-Helper-Scripts/blob/main/Goodgulf/mir5c.png)
 
 
 
