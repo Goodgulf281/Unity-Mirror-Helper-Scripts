@@ -11,8 +11,8 @@ If you want to import the mirror-ui-standard-assets package into your project th
 5. You’ll need to configure client authority on the network transform and animator components and link the prefab to the animator property.
 6. Add the Offline, Room and Playground scenes to the build settings and you’re ready to go.
 
-![Network Transform](mira.png)
-![Network Animator](mirb.png)
+![Network Transform](./mira.png)
+![Network Animator](/mirb.png)
 ![Network Room Manager UI](mirc.png)
 
 
