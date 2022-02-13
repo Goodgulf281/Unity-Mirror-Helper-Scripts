@@ -16,10 +16,10 @@ If you want to import the mirror-ui-standard-assets package into your project th
 
 ![Network Animator](https://github.com/Goodgulf281/Unity-Mirror-Helper-Scripts/blob/main/Goodgulf/mir5b.png)
 
-![Network Room Manager UI](https://github.com/Goodgulf281/Unity-Mirror-Helper-Scripts/blob/main/Goodgulf/mir5c.png)
-
 
 
 ## Errors
 
 If you open the Offline scene before completing step 4 then make sure to add the PlayerArmature prefab again as the Player Prefab in the NetworkRoomManager.
+
+![Network Room Manager UI](https://github.com/Goodgulf281/Unity-Mirror-Helper-Scripts/blob/main/Goodgulf/mir5c.png)
