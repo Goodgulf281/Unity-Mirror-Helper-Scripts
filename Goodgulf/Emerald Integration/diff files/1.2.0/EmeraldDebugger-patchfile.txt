@@ -1,0 +1,39 @@
+--- D:\Emerald\original\EmeraldDebugger.cs	Sat Jul 20 00:28:59 2024
++++ EmeraldDebugger.cs	Thu Oct 17 11:52:18 2024
+@@ -1,4 +1,11 @@
+ using UnityEngine;
++using UnityEngine.AI;
++
++#if ASTAR
++using Pathfinding;                  // DKE: Referencing the AStarPathfinding code. If necessary also update your code assemblies.
++using System.Collections.Generic;   // DKE: Needed for the List<> class in method DrawNavMeshPathInternal()
++#endif
++
+ 
+ namespace EmeraldAI
+ {
+@@ -172,11 +179,24 @@
+         {
+             if (EnableDebuggingTools == YesOrNo.No || DrawNavMeshPath == YesOrNo.No) return;
+ 
++#if ASTAR
++            // DKE: rewritten for AStarPathfinding, see: https://www.arongranberg.com/astar/documentation/5_2_4_67ce3f038/aipath/getremainingpath.html#GetRemainingPath    
++
++            List<Vector3> buffer = new List<Vector3>();
++
++            EmeraldComponent.m_NavMeshAgent.GetRemainingPath(buffer, out bool stale);
++            for (int i = 0; i < buffer.Count - 1; i++) 
++            {
++                Debug.DrawLine(buffer[i], buffer[i+1], NavMeshPathColor);
++            }
++
++#else
+             for (int i = 0; i < EmeraldComponent.m_NavMeshAgent.path.corners.Length; i++)
+             {
+                 if (i > 0) Debug.DrawLine(EmeraldComponent.m_NavMeshAgent.path.corners[i - 1] + Vector3.up * 0.5f, EmeraldComponent.m_NavMeshAgent.path.corners[i] + Vector3.up * 0.5f, NavMeshPathColor);
+                 else Debug.DrawLine(EmeraldComponent.m_NavMeshAgent.path.corners[0] + Vector3.up * 0.5f, EmeraldComponent.m_NavMeshAgent.path.corners[i] + Vector3.up * 0.5f, NavMeshPathColor);
+             }
++#endif
+         }
+ 
+         /// <summary>

@@ -1,0 +1,50 @@
+--- D:\Emerald\original\EmeraldSystem.cs	Sat Jul 20 00:26:54 2024
++++ EmeraldSystem.cs	Wed Oct 16 23:25:57 2024
+@@ -3,6 +3,9 @@
+ using UnityEngine.AI;
+ using EmeraldAI.Utility;
+ using EmeraldAI.SoundDetection;
++#if ASTAR
++using Pathfinding; // DKE: Referencing the AStarPathfinding code. If necessary also update your code assemblies.
++#endif
+ 
+ namespace EmeraldAI
+ {
+@@ -43,12 +46,16 @@
+         #region Internal Components
+         public static GameObject ObjectPool;
+         public static GameObject CombatTextSystemObject;
++#if ASTAR
++        [HideInInspector] public NavMeshAgentImposter m_NavMeshAgent; // DKE
++#else      
+         [HideInInspector] public NavMeshAgent m_NavMeshAgent;
++#endif        
+         [HideInInspector] public BoxCollider AIBoxCollider;
+         [HideInInspector] public Animator AIAnimator;
+         [HideInInspector] public float TimeSinceEnabled;
+         #endregion
+-
++       
+         #region AI Components
+         [HideInInspector] public EmeraldDetection DetectionComponent;
+         [HideInInspector] public EmeraldBehaviors BehaviorsComponent;
+@@ -86,7 +93,19 @@
+             SoundDetectorComponent = GetComponent<EmeraldSoundDetector>();
+             InverseKinematicsComponent = GetComponent<EmeraldInverseKinematics>();
+             TPMComponent = GetComponent<TargetPositionModifier>();
++#if ASTAR
++            m_NavMeshAgent = GetComponent<NavMeshAgentImposter>();  // DKE
++            if (m_NavMeshAgent == null)
++            {
++                Debug.LogWarning($"EmeraldSystem.Awake(): No AIPath(derived) component found on this GameObject {this.name}");
++                m_NavMeshAgent = gameObject.AddComponent<NavMeshAgentImposter>();
++                //m_NavMeshAgent.areaMask = LayerMask.GetMask("Default");
++                //m_NavMeshAgent.groundMask = LayerMask.GetMask("Default");
++                m_NavMeshAgent.Initialize();
++            }
++#else            
+             m_NavMeshAgent = GetComponent<NavMeshAgent>();
++#endif            
+             AIBoxCollider = GetComponent<BoxCollider>();
+             AIAnimator = GetComponent<Animator>();
+             InitializeEmeraldObjectPool();
