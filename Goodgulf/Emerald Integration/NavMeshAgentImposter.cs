@@ -9,17 +9,13 @@ using static UnityEngine.GraphicsBuffer;
 namespace Pathfinding
 {
 
-    /* This class acts as an intermediate between the Emerald AI and AStarpathfinding code.
-     * Since Emerald AI is built on Unity Navmesh I created an imposter which appears to be Unity Navmesh but uses
-     * AStarpathfinding calls instead. So basically it translated all properties and methods which Emerald uses
-     * from Unity NavMesh, see https://docs.unity3d.com/2022.3/Documentation/ScriptReference/AI.NavMeshAgent.html
-     *
-     * I also added some additional debug code which can be enabled optionally using the SetDebugLevel method.
-     */
+
 
     public class NavMeshAgentImposter : AIPath
     {
         private bool _autoBraking;
+
+//  private bool _isOnNavMesh = true;
         private bool _isGridGraph = true;
         private int _debugLevel = 0;
 
@@ -30,8 +26,6 @@ namespace Pathfinding
             get => _debugLevel;
         }
 
-        // https://docs.unity3d.com/2022.3/Documentation/ScriptReference/AI.NavMeshAgent-stoppingDistance.html
-        // This has >40 usages in the Emerald code so it would require lots of additional code changes without this "imposter" code.
         public float stoppingDistance
         {
             get => endReachedDistance;
@@ -51,7 +45,6 @@ namespace Pathfinding
             }
         }
 
-        // https://docs.unity3d.com/2022.3/Documentation/ScriptReference/AI.NavMeshAgent-speed.html
         public float speed
         {
             get => maxSpeed;
@@ -71,7 +64,30 @@ namespace Pathfinding
             }
         }
 
-        // https://docs.unity3d.com/2022.3/Documentation/ScriptReference/AI.NavMeshAgent-autoBraking.html
+        /* Not tested, comment out this block if you derive NaMeshAgentImposter from RichAI instead of AIPath
+        
+        public float maxAcceleration
+        {
+            get => acceleration;
+            set
+            {
+                if (_debugLevel > 1)
+                {
+                    Debug.Log($"NavMeshAgentImposter.acceleration={value}");
+                }
+                else if (_debugLevel > 0)
+                {
+                    if (value < acceleration)
+                        Debug.Log($"NavMeshAgentImposter.acceleration reduced to={value}");
+                    else
+                        Debug.Log($"NavMeshAgentImposter.acceleration increased to={value}");
+                }
+
+                acceleration = value;
+            }
+        }
+        */
+
         public bool autoBraking
         {
             get => _autoBraking;
@@ -99,16 +115,35 @@ namespace Pathfinding
             }
         }
 
+        // https://forum.arongranberg.com/t/unity-navmesh-to-a-conversion/7888
 
+        public bool isOnOffMeshLink
+        {
+            get => IsOnOffMeshLink();
+        }
+
+
+        public bool IsOnOffMeshLink()
+        {
+            if (_isGridGraph)
+            {
+                return false;
+            }
+            else
+            {
+                // This can only be used if you derive the imposter from RichAI instead of AIPath:
+                // return traversingOffMeshLink;
+                return false;
+            }    
+        }
+        
         public bool isOnNavMesh
         {
             get => IsOnNavMesh();
         }
 
-        // https://docs.unity3d.com/2022.3/Documentation/ScriptReference/AI.NavMeshAgent-isOnNavMesh.html
-        // I used the code from this forum post:
         // https://forum.arongranberg.com/t/how-to-check-the-destination-can-be-reached/5554
-        // Since I only tested with the AStarpathfinding grid mesh this may require additional work.
+
         public bool IsOnNavMesh()
         {
             if (_debugLevel > 1)
@@ -130,8 +165,7 @@ namespace Pathfinding
             }
         }
 
-        // This is a helper function so IsOnNaveMesh() knows what kind of graph we are using. I'm now setting this
-        // in Emerald's EmeraldMovement.SetupNavMeshAgent() but that's currently a shortcut.       
+
         public void SetGraphMode(bool isGridGraph = true)
         {
             if (_debugLevel > 0)
@@ -140,7 +174,6 @@ namespace Pathfinding
             _isGridGraph = isGridGraph;
         }
 
-        // https://docs.unity3d.com/2022.3/Documentation/ScriptReference/AI.NavMeshAgent.ResetPath.html
         public void ResetPath()
         {
             //canSearch = false;
@@ -149,7 +182,6 @@ namespace Pathfinding
                 Debug.Log($"<color=yellow>NavMeshAgentImposter.ResetPath() called</color>");
         }
 
-        // https://docs.unity3d.com/2022.3/Documentation/ScriptReference/AI.NavMeshAgent.SetDestination.html
         public bool SetDestination(Vector3 target)
         {
             canSearch = true;
@@ -167,8 +199,6 @@ namespace Pathfinding
             _debugLevel = level;
         }
 
-        // https://docs.unity3d.com/2022.3/Documentation/ScriptReference/AI.NavMeshAgent.Warp.html
-        // Note: I don't think this is tested in any of the demo scripts.
         public bool Warp(Vector3 newPosition)
         {
             if (_debugLevel > 0)
@@ -178,7 +208,6 @@ namespace Pathfinding
             return true;
         }
 
-        // Initialize the mask values. Todo: this is code should be more flexible since it now uses default layer names. 
         public void Initialize()
         {
             if (_debugLevel > 0)
@@ -199,15 +228,13 @@ namespace Pathfinding
             groundMask = _groundMask;
         }
 
-        // This code simplifies code changes to Emerald Movement. It is only used 3 times in the emerald code.
         public void SetDestinationWithWaypoint(Vector3 waypoint)
         {
             if (_debugLevel > 0)
                 Debug.Log(
                     $"<color=yellow>NavMeshAgentImposter.SetDestinationWithWaypoint(): waypoint = {waypoint}</color>");
 
-            // Add a small offset to the Y coord. This is needed by Emerald Movement to ensure it picks the next waypoint.
-            // If the destination matches the exact waypoint coords the agent can get stuck at a waypoint.
+            // Add a small offset to the Y coord.
             Vector3 _destination = new Vector3(waypoint.x, waypoint.y + 0.1f, waypoint.z);
             destination = _destination;
         }
